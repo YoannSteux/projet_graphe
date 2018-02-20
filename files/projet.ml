@@ -7,7 +7,7 @@ let associate v1 v2 =
   in
   begin
     Mark.set v1 (Vertex.indice (V.label v2));
-    Mark.set v1 (label1);
+    Mark.set v2 (label1);
   end
 ;;
 
@@ -18,7 +18,36 @@ let separate v1 v2 =
   end
 ;;
 
-let contract g o a = [];;
+let rec retirer_arrete g a liste =
+  match liste with
+  |[] -> ()
+  |t::q -> begin 
+             (remove_edge g a t);
+             retirer_arrete g a q;
+           end
+;;
+
+let rec creer_arrete g o liste =
+  match liste with
+  |[] -> ()
+  |t::q -> begin 
+             (add_edge g o t);
+             creer_arrete g o q;
+           end
+;;
+
+
+let contract g o a = 
+begin
+   let liste = succ g a in
+   (* retirer les arretes o-a et s-a , s voisins de a *)
+   retirer_arrete g a ([o] @ liste);
+   (* ajouter les arretes s-o , s voisins de a *)
+   creer_arrete g o liste;
+   (* retirer sommet a *)
+   remove_vertex g a;
+end
+;;
 
 let insert g o a la = ();;
 
