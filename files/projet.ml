@@ -40,8 +40,10 @@ let rec creer_arrete g o liste =
 let contract g o a = 
 begin
    let liste = succ g a in
-   (* retirer les arretes o-a et s-a , s voisins de a *)
-   retirer_arrete g a ([o] @ liste);
+   (* retirer arrete o-a *)
+   remove_edge g a o;
+   (* retirer les arretes s-a , s voisins de a *)
+   retirer_arrete g a liste;
    (* ajouter les arretes s-o , s voisins de a *)
    creer_arrete g o liste;
    (* retirer sommet a *)
@@ -49,7 +51,18 @@ begin
 end
 ;;
 
-let insert g o a la = ();;
+let insert g o a la = 
+begin
+  (* ajouter sommet a *)
+  add_vertex g a;
+  (* retirer les arretes s-o , s voisins de a *)
+  retirer_arrete g o la;
+  (* ajouter les arretes s-a , s voisins de a *)
+  creer_arrete g a la;
+  (* ajouter arrete o-a *)
+  add_edge g a o;
+end
+;;
 
 
 (*Section 2*)
