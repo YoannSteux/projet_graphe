@@ -1,0 +1,8 @@
+Racines des différents squelettes à utiliser : 
+
+obj1_1 : obj1_1v5 
+obj1_2 : obj1_2v4
+obj1_3 : obj1_3v3
+
+obj2_1 : obj2_1v3
+obj2_2 : obj2_2v1
