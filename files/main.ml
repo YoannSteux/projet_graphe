@@ -85,12 +85,7 @@ copie_obj1_1 = copy obj1_1;;
 
 let test_equals_aux_1 = (equals_aux obj1_1 obj1_1v1 copie_obj1_1 obj1_1v1) = (true, [(obj1_1v1, obj1_1v1); (obj1_1v2, obj1_1v2); (obj1_1v3, obj1_1v3); (obj1_1v4, obj1_1v4); (obj1_1v5, obj1_1v5); (obj1_1v6, obj1_1v6); (obj1_1v7, obj1_1v7); (obj1_1v8, obj1_1v8); (obj1_1v9, obj1_1v9); (obj1_1v10, obj1_1v10)]);;
 
-(*let obj1_1 = copie_obj1_1;;*)
-
 (* equals *)
-
-insert obj1_1 obj1_1v3 obj1_1v11 [obj1_1v7];;
-contract obj1_1 obj1_1v3 obj1_1v11;;
 
 let test_equals_1 = (equals obj1_1 obj1_1v1 copie_obj1_1 obj1_1v1) = (true, [(obj1_1v1, obj1_1v1); (obj1_1v2, obj1_1v2); (obj1_1v3, obj1_1v3); (obj1_1v4, obj1_1v4); (obj1_1v5, obj1_1v5); (obj1_1v6, obj1_1v6); (obj1_1v7, obj1_1v7); (obj1_1v8, obj1_1v8); (obj1_1v9, obj1_1v9); (obj1_1v10, obj1_1v10)]);;
 
