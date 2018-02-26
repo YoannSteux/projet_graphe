@@ -94,9 +94,9 @@ let rec equals_aux g1 v1 g2 v2 =
       let (h1,h2) = (List.hd s1 , List.hd s2)
       in
       associate h1 h2;
-      let (bh,lh) = equals g1 h1 g2 h2
+      let (bh,lh) = equals_aux g1 h1 g2 h2
         and
-          (bq,lq) = equals g1 v1 g2 v2
+          (bq,lq) = equals_aux g1 v1 g2 v2
       in
       separate h1 h2;
       let lf = lh@lq
