@@ -42,12 +42,14 @@ begin
    let liste = succ g a in
    (* retirer arrete o-a *)
    remove_edge g a o;
+   let liste_sans_o = succ g a in
    (* retirer les arretes s-a , s voisins de a *)
    retirer_arrete g a liste;
    (* ajouter les arretes s-o , s voisins de a *)
    creer_arrete g o liste;
    (* retirer sommet a *)
    remove_vertex g a;
+   liste_sans_o
 end
 ;;
 
