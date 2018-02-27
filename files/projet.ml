@@ -118,12 +118,42 @@ and equals g1 v1 g2 v2 =
 
 (*Section 3*)
 
-let distance_aux g1 v1 g2 v2 = (0,[],[],[]);;
+let distance_aux g1 v1 g2 v2 = 
+let s1 = unmarked (ordered_succ g1 v1)  
+    and s2 = unmarked (ordered_succ g2 v2)  
+  in
+  if ((s1=[]) && (s2=[])) then
+    (0, [],[],[])
+  else 
+    if ((s1=[]) || (s2=[])) then
+      (0, [],[],[])
+    else
+    
+      let (h1,h2) = (List.hd s1 , List.hd s2)
+      in
+      associate h1 h2;
+      let (ch,l0h, l1h,l2h) = distance_aux g1 h1 g2 h2
+        and
+          (cq,l0q,l1q,l2q) = distance_aux g1 v1 g2 v2
+      in
+      separate h1 h2;
+      let l0 = l0h@l0q
+       and c = 
+       and l1 = 
+       and l2 =
+      in
+      (c, [(h1,h2)]@l0, l1, l2)
 
 
-
-
-let distance g1 v1 g2 v2 = (0,[],[],[]);;
+and distance g1 v1 g2 v2 =
+  associate v1 v2;
+  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
+  in
+  let l = [(v1,v2)]@l0
+  in
+  separate v1 v2;
+  (c,l,l1,l2)
+;;
 
 
 (*Section 4*)
