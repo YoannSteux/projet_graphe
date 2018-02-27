@@ -132,26 +132,41 @@ let s1 = unmarked (ordered_succ g1 v1)
       let (h1,h2) = (List.hd s1 , List.hd s2)
       in
       associate h1 h2;
-      let (ch,l0h, l1h,l2h) = distance_aux g1 h1 g2 h2
-        and
-          (cq,l0q,l1q,l2q) = distance_aux g1 v1 g2 v2
+      let l1 = contract g1 v1 h1
+      and l2 = contract g2 v2 h2
       in
-      separate h1 h2;
+      insert g1 v1 h1 l1;
+      insert g2 v2 h2 l2;
+      let (ch, l0h, l1h, l2h) = distance_aux g1 h1 g2 h2
+      and (cq, l0q, l1q, l2q) = distance_aux g2 v1 g2 v2
+      in
+      separate v1 v2;
+      (*insert g1 v1 h1 l1;
+      insert g2 v2 h2 l2;*)
       let l0 = l0h@l0q
-       and c = 
-       and l1 = 
-       and l2 =
+       and c = min ch cq
+       (*and l1 = l1h@l1q
+       and l2 = l2h@l2q*)
       in
       (c, [(h1,h2)]@l0, l1, l2)
 
 
 and distance g1 v1 g2 v2 =
   associate v1 v2;
-  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
+  let s1 = unmarked (ordered_succ g1 v1)  
+  and s2 = unmarked (ordered_succ g2 v2)
+  in
+  let (h1,h2) = (List.hd s1 , List.hd s2)
+  in
+  let ll1 = contract g1 v1 h1
+  and ll2 = contract g2 v2 h2
+  and (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
   in
   let l = [(v1,v2)]@l0
   in
   separate v1 v2;
+  (*insert g1 v1 h1 l1;
+  insert g2 v2 h2 l2;*)
   (c,l,l1,l2)
 ;;
 
