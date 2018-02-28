@@ -121,52 +121,70 @@ and equals g1 v1 g2 v2 =
 let distance_aux g1 v1 g2 v2 = 
 let s1 = unmarked (ordered_succ g1 v1)  
     and s2 = unmarked (ordered_succ g2 v2)  
-  in
-  if ((s1=[]) && (s2=[])) then
-    (0, [],[],[])
-  else 
-    if ((s1=[]) || (s2=[])) then
-      (0, [],[],[])
-    else
-    
-      let (h1,h2) = (List.hd s1 , List.hd s2)
-      in
-      associate h1 h2;
-      let l1 = contract g1 v1 h1
-      and l2 = contract g2 v2 h2
-      in
-      insert g1 v1 h1 l1;
-      insert g2 v2 h2 l2;
-      let (ch, l0h, l1h, l2h) = distance_aux g1 h1 g2 h2
-      and (cq, l0q, l1q, l2q) = distance_aux g2 v1 g2 v2
-      in
-      separate v1 v2;
-      (*insert g1 v1 h1 l1;
-      insert g2 v2 h2 l2;*)
-      let l0 = l0h@l0q
-       and c = min ch cq
-       (*and l1 = l1h@l1q
-       and l2 = l2h@l2q*)
-      in
-      (c, [(h1,h2)]@l0, l1, l2)
+  in    
+match (s1,s2) with
+|([],[]) ->(0, [],[],[])
+|(_,[]) ->  (* contracter g1 jusqu'à egalité *)
+begin
+  let h1 = List.hd s1 in
+  let l_ = contract g1 v1 h1 in
+  (c,l0,l1,l2) = distance_aux g1 h1 g2 v2;
+  insert g1 v1 h1 l_;
+  (c+1, l0, [(v1,h1)]@l1 , l2
+end
 
+|([],_) -> (* contracter g2 jusqu'à egalité *)
+begin
+  let h2 = List.hd s2 in
+  let l_ = contract g1 v2 h2 in
+  (c,l0,l1,l2) = distance_aux g1 v1 g2 h2;
+  insert g2 v2 h2 l_
+  (c+1 , l0, l1, [(v2,h2)]@l2
+end
+
+|(_,_) -> (* contracter g1 et g2 jusqu'à égalité *)
+begin
+  let h1 = List.hd s1 and h2 = List.hd s2 in
+  (* marquage des sommets h1 et h2  *)
+  begin
+    associate h1 h2;
+    let (c1,l01,l11,l21) = distance_aux g1 h1 g2 h2;
+    and (c2,l02,l12,l22) = distance_aux g1 v1 g2 v2;
+    in
+    separate h1 h2;
+    let (cm,l0m,l1m,l2m) = (c1+c2 , [a1,a2]@l01@l02 , l11@l12 , l21@l22);
+  end
+  (* contracter arete de gauche (v1, h1) de g1 *)
+  begin
+     let l_ = contract g2 v2 h2 in
+     let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
+     insert g2 v2 h2 l_;
+     let (cc1,l0c1, l1c1, l2c1) = (c+1,l0,l1, [v2,h2]@l2);
+  end
+  (* contracter arete de gauche (v2,h2) de g2 *)
+  begin
+     let l_ = contract g1 v1 h1 in
+     let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
+     insert g1 v1 h1 l_;
+     let (cc2, l0c2, l1c2, l2c2) = (c+1,l0, [v1,h1]@l1, l2)
+  end
+  (* choix *)
+  if ((cm <= cc1)&&(cm <= cc2) then
+    (cm,l0m,l1m,l2m)
+  else
+    if ((cm >= cc1)&&(cc1 <= cc2) then
+      (cc1,l0c1, l1c1, l2c1)
+    else 
+      (cc2, l0c2, l1c2, l2c2)
+end
 
 and distance g1 v1 g2 v2 =
   associate v1 v2;
-  let s1 = unmarked (ordered_succ g1 v1)  
-  and s2 = unmarked (ordered_succ g2 v2)
-  in
-  let (h1,h2) = (List.hd s1 , List.hd s2)
-  in
-  let ll1 = contract g1 v1 h1
-  and ll2 = contract g2 v2 h2
-  and (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
+  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
   in
   let l = [(v1,v2)]@l0
   in
   separate v1 v2;
-  (*insert g1 v1 h1 l1;
-  insert g2 v2 h2 l2;*)
   (c,l,l1,l2)
 ;;
 
