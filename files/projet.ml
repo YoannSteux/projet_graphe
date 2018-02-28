@@ -123,29 +123,29 @@ let s1 = unmarked (ordered_succ g1 v1)
     and s2 = unmarked (ordered_succ g2 v2)  
   in    
 match (s1,s2) with
-|([],[]) ->(0, [],[],[])
+|([],[]) ->((0, [],[],[]))
 |(h1::q1,[]) ->  (* contracter g1 jusqu'à egalité *)
   (let l_ = contract g1 v1 h1 in
-  let (c,l0,l1,l2) = distance_aux g1 h1 g2 v2 in
+  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
   insert g1 v1 h1 l_;
-  (c+1, l0, [(v1,h1)]@l1, l2))
+  (c+1, l0, (v1,h1)::l1, l2))
 
 |([],h2::q2) -> (* contracter g2 jusqu'à egalité *)
   (let l_ = contract g2 v2 h2 in
-  let (c,l0,l1,l2) = distance_aux g1 v1 g2 h2 in
+  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
   insert g2 v2 h2 l_;
-  (c+1 , l0, l1, [(v2,h2)]@l2))
+  (c+1 , l0, l1, (v2,h2)::l2))
 
 |(h1::q1, h2::q2) -> (* contracter g1 et g2 jusqu'à égalité *)
   (* marquage des sommets h1 et h2  *)
-    (let (cm, l0m, l1m, l2m) =
+    let (cm, l0m, l1m, l2m) =
     begin
     associate h1 h2;
     let (c1,l01,l11,l21) = distance_aux g1 h1 g2 h2 in
     let (c2,l02,l12,l22) = distance_aux g1 v1 g2 v2
     in
-    separate h1 h2;
-    (c1+c2 , [(h1,h2)]@l01@l02 , l11@l12 , l21@l22);
+    (separate h1 h2;
+    (c1+c2 , (h1,h2)::l01@l02 , l11@l12 , l21@l22);)
     end
     in
   (* contracter arete de gauche (v1, h1) de g2 *)
@@ -153,8 +153,8 @@ match (s1,s2) with
      begin
      let l_ = contract g2 v2 h2 in
      let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
-     insert g2 v2 h2 l_;
-     (c+1,l0,l1, [(v2,h2)]@l2);
+     (insert g2 v2 h2 l_;
+     (c+1,l0,l1, (v2,h2)::l2);)
      end
      in
   (* contracter arete de gauche (v1,h1) de g1 *)
@@ -162,24 +162,24 @@ match (s1,s2) with
      begin
      let l_ = contract g1 v1 h1 in
      let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
-     insert g1 v1 h1 l_;
-     (c+1,l0, [(v1,h1)]@l1, l2);
+     (insert g1 v1 h1 l_;
+     (c+1,l0, (v1,h1)::l1, l2);)
      end
      in
   (* choix *)
-  if ((cm <= cc1)&&(cm <= cc2)) then
+  if (cm <= cc1)&&(cm <= cc2) then
     (cm,l0m,l1m,l2m)
   else(
-    if ((cc1 <= cm)&&(cc1 <= cc2)) then
+    if (cc2 <= cm)&&(cc2 <= cc1) then
       (cc2,l0c2, l1c2, l2c2)
     else 
-       (cc1, l0c1, l1c1, l2c1)))
+       (cc1, l0c1, l1c1, l2c1))
 
 and distance g1 v1 g2 v2 =
   associate v1 v2;
   let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
   in
-  let l = [(v1,v2)]@l0
+  let l = (v1,v2)::l0
   in
   separate v1 v2;
   (c,l,l1,l2)
