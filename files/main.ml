@@ -93,6 +93,7 @@ let test_equals_2 = List.for_all (fun elt -> List.mem elt (snd res_equals)) list
 let test_equals_3 = List.length liste_noeuds_correspondance = List.length (snd res_equals);;
 
 
+
 (******************************************************************************)
 
 (***** Section 3 *****)
@@ -102,13 +103,39 @@ let test_equals_3 = List.length liste_noeuds_correspondance = List.length (snd r
 
 let fonction_testee = "********** TESTS DISTANCE **********";;
 
+let (c_res, l0_res, l1_res, l2_res) = distance obj1_1 obj1_1v5 obj1_3 obj1_3v3;;
+let c = 2;;
+let l0 = [(obj1_1v5, obj1_3v3); (obj1_1v10, obj1_3v10); (obj1_1v8, obj1_3v8); (obj1_1v2, obj1_3v1); (obj1_1v9, obj1_3v7); (obj1_1v3, obj1_3v4); (obj1_1v4, obj1_3v9); (obj1_1v7, obj1_3v6); (obj1_1v6, obj1_3v5)];;
+let l1 = [(obj1_1v2, obj1_1v1)];;
+let l2 = [(obj1_3v1, obj1_3v2)];;
+
 (* Tests *)
-let res_distance = distance obj1_1 obj1_1v5 obj1_3 obj1_3v3;;
+let test_distance_1 = c = c_res;;
+let test_distance_2 = l0 = l0_res;;
+let test_distance_3 = l1 = l1_res;;
+let test_distance_4 = l2 = l2_res;;
+
+
 
 (******************************************************************************)
 
 (***** Section 4 *****)
 
 (* distance_opti *)
+(*
+#use "skeltest.ml";;
 
+let fonction_testee = "********** TESTS DISTANCE_OPTI **********";;
 
+let (c_res, l0_res, l1_res, l2_res) = distance_opti obj1_1 obj1_1v5 obj1_3 obj1_3v3;;
+let c = 2;;
+let l0 = [(obj1_1v5, obj1_3v3); (obj1_1v10, obj1_3v10); (obj1_1v8, obj1_3v8); (obj1_1v2, obj1_3v1); (obj1_1v9, obj1_3v7); (obj1_1v3, obj1_3v4); (obj1_1v4, obj1_3v9); (obj1_1v7, obj1_3v6); (obj1_1v6, obj1_3v5)];;
+let l1 = [(obj1_1v2, obj1_1v1)];;
+let l2 = [(obj1_3v1, obj1_3v2)];;
+
+(* Tests *)
+let test_distance_1 = c = c_res;;
+let test_distance_2 = l0 = l0_res;;
+let test_distance_3 = l1 = l1_res;;
+let test_distance_4 = l2 = l2_res;;
+*)

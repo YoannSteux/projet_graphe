@@ -118,65 +118,62 @@ and equals g1 v1 g2 v2 =
 
 (*Section 3*)
 
-let distance_aux g1 v1 g2 v2 = 
+let rec distance_aux g1 v1 g2 v2 = 
 let s1 = unmarked (ordered_succ g1 v1)  
     and s2 = unmarked (ordered_succ g2 v2)  
   in    
 match (s1,s2) with
 |([],[]) ->(0, [],[],[])
-|(_,[]) ->  (* contracter g1 jusqu'à egalité *)
-begin
-  let h1 = List.hd s1 in
-  let l_ = contract g1 v1 h1 in
-  (c,l0,l1,l2) = distance_aux g1 h1 g2 v2;
+|(h1::q1,[]) ->  (* contracter g1 jusqu'à egalité *)
+  (let l_ = contract g1 v1 h1 in
+  let (c,l0,l1,l2) = distance_aux g1 h1 g2 v2 in
   insert g1 v1 h1 l_;
-  (c+1, l0, [(v1,h1)]@l1 , l2
-end
+  (c+1, l0, [(v1,h1)]@l1, l2))
 
-|([],_) -> (* contracter g2 jusqu'à egalité *)
-begin
-  let h2 = List.hd s2 in
-  let l_ = contract g1 v2 h2 in
-  (c,l0,l1,l2) = distance_aux g1 v1 g2 h2;
-  insert g2 v2 h2 l_
-  (c+1 , l0, l1, [(v2,h2)]@l2
-end
+|([],h2::q2) -> (* contracter g2 jusqu'à egalité *)
+  (let l_ = contract g2 v2 h2 in
+  let (c,l0,l1,l2) = distance_aux g1 v1 g2 h2 in
+  insert g2 v2 h2 l_;
+  (c+1 , l0, l1, [(v2,h2)]@l2))
 
-|(_,_) -> (* contracter g1 et g2 jusqu'à égalité *)
-begin
-  let h1 = List.hd s1 and h2 = List.hd s2 in
+|(h1::q1, h2::q2) -> (* contracter g1 et g2 jusqu'à égalité *)
   (* marquage des sommets h1 et h2  *)
-  begin
+    (let (cm, l0m, l1m, l2m) =
+    begin
     associate h1 h2;
-    let (c1,l01,l11,l21) = distance_aux g1 h1 g2 h2;
-    and (c2,l02,l12,l22) = distance_aux g1 v1 g2 v2;
+    let (c1,l01,l11,l21) = distance_aux g1 h1 g2 h2 in
+    let (c2,l02,l12,l22) = distance_aux g1 v1 g2 v2
     in
     separate h1 h2;
-    let (cm,l0m,l1m,l2m) = (c1+c2 , [a1,a2]@l01@l02 , l11@l12 , l21@l22);
-  end
-  (* contracter arete de gauche (v1, h1) de g1 *)
-  begin
+    (c1+c2 , [(h1,h2)]@l01@l02 , l11@l12 , l21@l22);
+    end
+    in
+  (* contracter arete de gauche (v1, h1) de g2 *)
+     let (cc2, l0c2, l1c2, l2c2) =
+     begin
      let l_ = contract g2 v2 h2 in
      let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
      insert g2 v2 h2 l_;
-     let (cc1,l0c1, l1c1, l2c1) = (c+1,l0,l1, [v2,h2]@l2);
-  end
-  (* contracter arete de gauche (v2,h2) de g2 *)
-  begin
+     (c+1,l0,l1, [(v2,h2)]@l2);
+     end
+     in
+  (* contracter arete de gauche (v1,h1) de g1 *)
+     let (cc1, l0c1, l1c1, l2c1) = 
+     begin
      let l_ = contract g1 v1 h1 in
      let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 in
      insert g1 v1 h1 l_;
-     let (cc2, l0c2, l1c2, l2c2) = (c+1,l0, [v1,h1]@l1, l2)
-  end
+     (c+1,l0, [(v1,h1)]@l1, l2);
+     end
+     in
   (* choix *)
-  if ((cm <= cc1)&&(cm <= cc2) then
+  if ((cm <= cc1)&&(cm <= cc2)) then
     (cm,l0m,l1m,l2m)
-  else
-    if ((cm >= cc1)&&(cc1 <= cc2) then
-      (cc1,l0c1, l1c1, l2c1)
+  else(
+    if ((cc1 <= cm)&&(cc1 <= cc2)) then
+      (cc2,l0c2, l1c2, l2c2)
     else 
-      (cc2, l0c2, l1c2, l2c2)
-end
+       (cc1, l0c1, l1c1, l2c1)))
 
 and distance g1 v1 g2 v2 =
   associate v1 v2;
