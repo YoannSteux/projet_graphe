@@ -109,11 +109,15 @@ let l0 = [(obj1_1v5, obj1_3v3); (obj1_1v10, obj1_3v10); (obj1_1v8, obj1_3v8); (o
 let l1 = [(obj1_1v2, obj1_1v1)];;
 let l2 = [(obj1_3v1, obj1_3v2)];;
 
+let (c_res2, l0_res2, l1_res2, l2_res2) = distance obj1_1 obj1_1v5 obj1_1 obj1_1v5;;
+let c2 = 0;;
+
 (* Tests *)
 let test_distance_1 = c = c_res;;
 let test_distance_2 = l0 = l0_res;;
 let test_distance_3 = l1 = l1_res;;
 let test_distance_4 = l2 = l2_res;;
+let test_distance_5 = c2 = c_res2;;
 
 
 
