@@ -1,4 +1,4 @@
-
+open Skeleton.Skeleton;;
 (*Section 1*)
 
 
@@ -41,12 +41,12 @@ let contract g o a =
 begin
    let liste = succ g a in
    (* retirer arrete o-a *)
-   remove_edge g a o;
+   remove_edge g o a;
    let liste_sans_o = succ g a in
    (* retirer les arretes s-a , s voisins de a *)
-   retirer_arrete g a liste;
+   retirer_arrete g a liste_sans_o;
    (* ajouter les arretes s-o , s voisins de a *)
-   creer_arrete g o liste;
+   creer_arrete g o liste_sans_o;
    (* retirer sommet a *)
    remove_vertex g a;
    liste_sans_o
@@ -104,7 +104,8 @@ let rec equals_aux g1 v1 g2 v2 =
       ((bh && bq), [(h1,h2)]@lf)
     
 and equals g1 v1 g2 v2 = 
-
+  Mark.clear g1;
+  Mark.clear g2;
   associate v1 v2;
   let (b, lr) = equals_aux g1 v1 g2 v2
   in
