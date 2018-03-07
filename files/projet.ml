@@ -254,7 +254,7 @@ match (s1,s2) with
 
 and distance_opti g1 v1 g2 v2 =
   associate v1 v2;
-  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2
+  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 0 ((nb_edge g1)+(nb_edge g2))
   in
   let l = (v1,v2)::l0
   in
