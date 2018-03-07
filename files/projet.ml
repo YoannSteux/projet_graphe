@@ -190,7 +190,7 @@ and distance g1 v1 g2 v2 =
 (*Section 4*)
 
 
-let rec distance_aux g1 v1 g2 v2 nb_contract c_min = 
+let rec distance_opti_aux g1 v1 g2 v2 nb_contract c_min = 
 
 if (nb_contract >= c_min) then
   (c_min, [],[],[])
@@ -203,13 +203,13 @@ match (s1,s2) with
 |([],[]) ->((0, [],[],[]))
 |(h1::q1,[]) ->  (* contracter g1 jusqu'à egalité *)
   (let l_ = contract g1 v1 h1 in
-  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 (nb_contract +1) c_min in
+  let (c,l0,l1,l2) = distance_opti_aux g1 v1 g2 v2 (nb_contract +1) c_min in
   insert g1 v1 h1 l_;
   (c+1, l0, (v1,h1)::l1, l2))
 
 |([],h2::q2) -> (* contracter g2 jusqu'à egalité *)
   (let l_ = contract g2 v2 h2 in
-  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 (nb_contract +1) c_min in
+  let (c,l0,l1,l2) = distance_opti_aux g1 v1 g2 v2 (nb_contract +1) c_min in
   insert g2 v2 h2 l_;
   (c+1 , l0, l1, (v2,h2)::l2))
 
@@ -218,8 +218,8 @@ match (s1,s2) with
     let (cm, l0m, l1m, l2m) =
     begin
     associate h1 h2;
-    let (c1,l01,l11,l21) = distance_aux g1 h1 g2 h2 nb_contract c_min in
-    let (c2,l02,l12,l22) = distance_aux g1 v1 g2 v2 nb_contract c_min
+    let (c1,l01,l11,l21) = distance_opti_aux g1 h1 g2 h2 nb_contract c_min in
+    let (c2,l02,l12,l22) = distance_opti_aux g1 v1 g2 v2 nb_contract c_min
     in
     (separate h1 h2;
     (c1+c2 , (h1,h2)::l01@l02 , l11@l12 , l21@l22);)
@@ -229,7 +229,7 @@ match (s1,s2) with
      let (cc2, l0c2, l1c2, l2c2) =
      begin
      let l_ = contract g2 v2 h2 in
-     let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 (nb_contract +1) (min c_min cm) in
+     let (c,l0,l1,l2) = distance_opti_aux g1 v1 g2 v2 (nb_contract +1) (min c_min cm) in
      (insert g2 v2 h2 l_;
      (c+1,l0,l1, (v2,h2)::l2);)
      end
@@ -238,7 +238,7 @@ match (s1,s2) with
      let (cc1, l0c1, l1c1, l2c1) = 
      begin
      let l_ = contract g1 v1 h1 in
-     let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 (nb_contract +1) (min cc2 cm) in
+     let (c,l0,l1,l2) = distance_opti_aux g1 v1 g2 v2 (nb_contract +1) (min cc2 cm) in
      (insert g1 v1 h1 l_;
      (c+1,l0, (v1,h1)::l1, l2);)
      end
@@ -254,7 +254,7 @@ match (s1,s2) with
 
 and distance_opti g1 v1 g2 v2 =
   associate v1 v2;
-  let (c,l0,l1,l2) = distance_aux g1 v1 g2 v2 0 ((nb_edge g1)+(nb_edge g2))
+  let (c,l0,l1,l2) = distance_opti_aux g1 v1 g2 v2 0 ((nb_edges g1)+(nb_edges g2))
   in
   let l = (v1,v2)::l0
   in

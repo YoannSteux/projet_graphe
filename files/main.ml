@@ -43,6 +43,7 @@ let test_separate_4 = Mark.get obj1_3v4 = 0;;
 let fonction_testee = "********** TESTS CONTRACT **********";;
 
 let voisins_obj1_1v1 = succ obj1_1 obj1_1v1;;
+let voisins_obj1_1v1_sans_v2 = List.filter (fun elt -> not(elt = obj1_1v2)) voisins_obj1_1v1;;
 
 let res_contract = contract obj1_1 obj1_1v2 obj1_1v1;;
 let voisins_obj1_1v2_apres_contract = succ obj1_1 obj1_1v2;;
@@ -50,7 +51,7 @@ let voisins_obj1_1v2_apres_contract = succ obj1_1 obj1_1v2;;
 (* Tests *)
 let test_contract_1 = not(mem_vertex obj1_1 obj1_1v1);;
 let test_contract_2 = not(mem_edge obj1_1 obj1_1v1 obj1_1v2);;
-let test_contract_3 = List.for_all (fun elt -> List.mem elt voisins_obj1_1v2_apres_contract) voisins_obj1_1v1;;
+let test_contract_3 = List.for_all (fun elt -> List.mem elt voisins_obj1_1v2_apres_contract) voisins_obj1_1v1_sans_v2;;
 let test_contract_4 = res_contract = (List.filter (fun elt -> not(elt = obj1_1v2)) voisins_obj1_1v1);;
 
 
@@ -126,7 +127,7 @@ let test_distance_5 = c2 = c_res2;;
 (***** Section 4 *****)
 
 (* distance_opti *)
-(*
+
 #use "skeltest.ml";;
 
 let fonction_testee = "********** TESTS DISTANCE_OPTI **********";;
@@ -137,9 +138,12 @@ let l0 = [(obj1_1v5, obj1_3v3); (obj1_1v10, obj1_3v10); (obj1_1v8, obj1_3v8); (o
 let l1 = [(obj1_1v2, obj1_1v1)];;
 let l2 = [(obj1_3v1, obj1_3v2)];;
 
+let (c_res2, l0_res2, l1_res2, l2_res2) = distance_opti obj1_1 obj1_1v5 obj1_1 obj1_1v5;;
+let c2 = 0;;
+
 (* Tests *)
-let test_distance_1 = c = c_res;;
-let test_distance_2 = l0 = l0_res;;
-let test_distance_3 = l1 = l1_res;;
-let test_distance_4 = l2 = l2_res;;
-*)
+let test_distance_opti_1 = c = c_res;;
+let test_distance_opti_2 = l0 = l0_res;;
+let test_distance_opti_3 = l1 = l1_res;;
+let test_distance_opti_4 = l2 = l2_res;;
+let test_distance_opti_5 = c2 = c_res2;;
